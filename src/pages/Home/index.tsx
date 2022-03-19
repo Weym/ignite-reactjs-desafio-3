@@ -51,12 +51,12 @@ const Home = (): JSX.Element => {
   return (
     <ProductList>
       {products.map((product) => {
-        const { id, title, price, image } = product;
+        const { id, title, priceFormatted, image } = product;
         return (
           <li key={id}>
             <img src={image} alt={title} />
             <strong>{title}</strong>
-            <span>{price}</span>
+            <span>{priceFormatted}</span>
             <button
               type="button"
               data-testid="add-product-button"
