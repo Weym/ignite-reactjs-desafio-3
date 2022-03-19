@@ -58,15 +58,16 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         setCart([...cart, { ...product, amount: 1 }]);
       }
     } catch {
-      // TODO
+      toast.error("Ocorreu um erro inesperado");
     }
   };
 
   const removeProduct = (productId: number) => {
     try {
-      // TODO
+      const updatedCart = cart.filter((product) => product.id !== productId);
+      setCart(updatedCart);
     } catch {
-      // TODO
+      toast.error("Ocorreu um erro inesperado");
     }
   };
 
@@ -75,9 +76,26 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
-      // TODO
+      if (amount < 1) {
+        throw new Error("Inválido");
+      }
+
+      const {
+        data: { amount: stockAmount },
+      } = await api.get(`stock/${productId}`);
+
+      if (stockAmount < amount) {
+        toast.error("Quantidade solicitada fora de estoque");
+        return;
+      }
+
+      const updatedCart = cart.map((product) => {
+        return product.id === productId ? { ...product, amount } : product;
+      });
+
+      setCart(updatedCart);
     } catch {
-      // TODO
+      toast.error("Ocorreu um erro inesperado");
     }
   };
 
