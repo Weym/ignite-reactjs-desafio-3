@@ -69,6 +69,12 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const removeProduct = (productId: number) => {
     try {
+      const productExists = cart.find((product) => productId === product.id);
+
+      if (!productExists) {
+        throw new Error("O produto não existe no carrinho");
+      }
+
       const updatedCart = cart.filter((product) => product.id !== productId);
       setCart(updatedCart);
       localStorage.setItem("@RocketShoes:cart", JSON.stringify(updatedCart));
